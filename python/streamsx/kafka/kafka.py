@@ -66,6 +66,7 @@ class KafkaConsumer(streamsx.spl.op.Source):
 
 
 
+
     def __init__(self, topology, schema,topic, vmArg=None, appConfigName=None, clientId=None, outputKeyAttributeName=None,
                  outputMessageAttributeName=None, outputTopicAttributeName=None, partition=None, propertiesFile=None,
                  startPosition=None, triggerCount=None, userLib=None, name=None):
