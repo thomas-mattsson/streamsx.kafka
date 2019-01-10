@@ -1,3 +1,3 @@
-# Kafka Toolkit Python package
+# You are in the branch for the Kafka Toolkit Python package
 
-TODO.
+In this branch only the Python package for the Kafka toolkit is developed.
