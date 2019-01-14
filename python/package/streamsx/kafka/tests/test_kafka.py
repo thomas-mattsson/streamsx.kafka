@@ -31,8 +31,8 @@ import json
 class TestSubscribeParams(TestCase):
     def test_schemas_ok(self):
         topo = Topology()
-        kafka.subscribe(topo, 'T1', CommonSchema.String, appConfigName='kafkatest')
-        kafka.subscribe(topo, 'T1', CommonSchema.Json, appConfigName='kafkatest')
+        kafka.subscribe(topo, 'T1', 'kafkatest', CommonSchema.String)
+        kafka.subscribe(topo, 'T1', 'kafkatest', CommonSchema.Json)
 
     def test_schemas_bad(self):
         topo = Topology()
@@ -54,7 +54,7 @@ class JsonData(object):
         # Since we are reading from the end allow
         # time to get the consumer started.
         if self.delay:
-            time.sleep(5)
+            time.sleep(10)
         for i in range(self.count):
             yield {'p': self.prefix + '_' + str(i), 'c': i}
 
@@ -65,18 +65,19 @@ class StringData(object):
         self.delay = delay
     def __call__(self):
         if self.delay:
-            time.sleep(5)
+            time.sleep(10)
         for i in range(self.count):
             yield self.prefix + '_' + str(i)
 
 def add_kafka_toolkit(topo):
-    streamsx.spl.toolkit.add_toolkit(topo,
-        os.path.expanduser('~/toolkits/com.ibm.streamsx.kafka'))
+    streamsx.spl.toolkit.add_toolkit(topo, os.environ["KAFKA_TOOLKIT_HOME"])
 
 
 class TestKafka(TestCase):
     def setUp(self):
         Tester.setup_distributed (self)
+        self.test_config[streamsx.topology.context.ConfigParams.SSL_VERIFY] = False
+
 
     def test_json(self):
         n = 104
@@ -86,7 +87,7 @@ class TestKafka(TestCase):
         s = topo.source(JsonData(uid, n)).as_json()
         kafka.publish(s, 'KAFKA_TEST', appConfigName='kafkatest')
 
-        r = kafka.subscribe(topo, 'KAFKA_TEST', CommonSchema.Json, appConfigName='kafkatest')
+        r = kafka.subscribe(topo, 'KAFKA_TEST', 'kafkatest', CommonSchema.Json)
         r = r.filter(lambda t : t['p'].startswith(uid))
         expected = list(JsonData(uid, n, False)())
 
@@ -101,9 +102,9 @@ class TestKafka(TestCase):
         add_kafka_toolkit(topo)
         uid = str(uuid.uuid4())
         s = topo.source(StringData(uid, n)).as_string()
-        kafka.publish(s, 'KAFKA_TEST', appConfigName='kafkatest')
+        kafka.publish(s, 'KAFKA_TEST', 'kafkatest')
 
-        r = kafka.subscribe(topo, 'KAFKA_TEST', CommonSchema.String, appConfigName='kafkatest')
+        r = kafka.subscribe(topo, 'KAFKA_TEST', 'kafkatest', CommonSchema.String)
         r = r.filter(lambda t : t.startswith(uid))
         expected = list(StringData(uid, n, False)())
 

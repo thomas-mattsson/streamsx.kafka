@@ -10,7 +10,7 @@ import streamsx.spl.types
 from streamsx.topology.schema import CommonSchema
 
 
-def subscribe(topology, topic, schema, group=None, appConfigName, name=None):
+def subscribe(topology, topic, appConfigName, schema, group=None, name=None):
     """Subscribe to messages from a Kafka broker for a single topic.
 
     Adds a Kafka consumer that subscribes to a topic
@@ -19,9 +19,9 @@ def subscribe(topology, topic, schema, group=None, appConfigName, name=None):
     Args:
         topology(Topology): Topology that will contain the stream of messages.
         topic(str): Topic to subscribe messages from.
+        appConfigName(str): The name of the application configuration containing the consumer configurations, at minimum the ``bootstrap.servers`` property. Must not be set to ``None``.
         schema(StreamSchema): Schema for returned stream.
         group(str): Kafka consumer group identifier. When not specified it default to the job name with `topic` appended separated by an underscore.
-        appConfigName(str): The name of the application configuration containing the consumer configurations, at minimum the ``bootstrap.servers`` property. Must not be set to ``None``.
         name(str): Consumer name in the Streams context, defaults to a generated name.
 
     Returns:

@@ -27,3 +27,43 @@ The documentation is also setup at `readthedocs.io` under the account: `IBMStrea
 
 Documentation links:
 * http://streamsxkafka.readthedocs.io/en/pypackage
+
+## Test
+
+The tests are run with a locally installed Streams installation and any Kafka broker.
+Following environment variables must be set:
+
+| Enveironment variable | content |
+| --- | --- |
+| STREAMS_INSTALL | must point to your Streams installation |
+| PYTHONHOME | must point to your Python environment |
+| STREAMS_USERNAME | The username of the Streams user |
+| STREAMS_PASSWORD | The password of the Streams user |
+| KAFKA_TOOLKIT_HOME | The directory where the Kafka toolkit is located |
+
+The Streams runtime must be aware of the `PYTHONHOME` variable. Ify you set the variable
+in your login shell, the Streams domain must be restarted or the variable must be made
+available to the runtime by using following *streamtool* command:
+
+```
+streamtool setproperty --application-ev PYTHONHOME=path_to_python_install
+```
+
+For the tests, an application configuration with name `kafkatest` is required. It can be created
+on instance or domain level and must contain the properties `bootstrap.servers` in the form
+`kafka_server1:port,kafka_server2:port,...`.
+
+Run the tests with
+
+```
+cd python/package
+python3 -u -m unittest streamsx.kafka.tests.test_kafka.TestSubscribeParams
+python3 -u -m unittest streamsx.kafka.tests.test_kafka.TestKafka
+```
+
+or, to test all test cases
+
+```
+cd python/package
+python3 -u -m unittest streamsx.kafka.tests.test_kafka
+```
