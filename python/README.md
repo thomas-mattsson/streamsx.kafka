@@ -7,7 +7,7 @@ Package is organized using standard packaging to upload to PyPi.
 The package is uploaded to PyPi in the standard way:
 ```
 cd python/package
-python setup.py sdist bdist_wheel upload -r pypi
+python3 setup.py sdist bdist_wheel upload -r pypi
 ```
 **Note:** This is done using the `ibmstreams` account at pypi.org
 
