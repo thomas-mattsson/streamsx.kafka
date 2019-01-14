@@ -7,6 +7,7 @@ Package is organized using standard packaging to upload to PyPi.
 The package is uploaded to PyPi in the standard way:
 ```
 cd python/package
+rm -rf streamsx.kafka.egg-info/ build/ dist/
 python3 setup.py sdist bdist_wheel upload -r pypi
 ```
 **Note:** This is done using the `ibmstreams` account at pypi.org
