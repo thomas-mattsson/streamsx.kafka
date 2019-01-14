@@ -15,7 +15,7 @@ Sample
 ======
 
 A simple hello world example of a Streams application publishing to
-a topic and the same application consuming the same topic:
+a topic and the same application consuming the same topic::
 
     from streamsx.topology.topology import Topology
     from streamsx.topology.schema import CommonSchema
