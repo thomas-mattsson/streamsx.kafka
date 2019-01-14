@@ -36,13 +36,11 @@ Following environment variables must be set:
 | Enveironment variable | content |
 | --- | --- |
 | STREAMS_INSTALL | must point to your Streams installation |
-| PYTHONHOME | must point to your Python environment |
 | STREAMS_USERNAME | The username of the Streams user |
 | STREAMS_PASSWORD | The password of the Streams user |
 | KAFKA_TOOLKIT_HOME | The directory where the Kafka toolkit is located |
 
-The Streams runtime must be aware of the `PYTHONHOME` variable. Ify you set the variable
-in your login shell, the Streams domain must be restarted or the variable must be made
+The Streams runtime must be aware of the `PYTHONHOME` variable. The variable must be made
 available to the runtime by using following *streamtool* command:
 
 ```
