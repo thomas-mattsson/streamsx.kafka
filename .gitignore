@@ -1,2 +1,6 @@
 python/package/job_*
 __pycache__
+python/package/build/
+python/package/dist/
+python/package/streamsx.kafka.egg-info/
+

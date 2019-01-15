@@ -18,7 +18,10 @@ The name of the application configuration must be specified using the ``appConfi
 parameter to :py:func:`subscribe` or :py:func:`publish`.
 The minimum set of properties in the application configuration contains ``bootstrap.servers``, for example
 
-    bootstrap.servers   host1:port1,host2:port2,host3:port3
+.. csv-table::
+    :header: config, value3
+
+    bootstrap.servers, host1:port1,host2:port2,host3:port3
 
 Other configs for Kafka consumers or Kafka producers can be added to the application configuration.
 When configurations are specified, which are specific for consumers or producers only, it is recommended
@@ -73,7 +76,7 @@ a topic and the same application consuming the same topic:
 
 """
 
-__version__='0.1.0'
+__version__='0.1.1'
 
 __all__ = ['subscribe', 'publish']
 from streamsx.kafka._kafka import subscribe, publish
