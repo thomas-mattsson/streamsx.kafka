@@ -34,7 +34,7 @@ Documentation links:
 To change the version information of the Python package, edit following files:
 
 - ./package/docs/source/conf.py
-- ./package/streamsx/kafka/__init__.py
+- ./package/streamsx/kafka/\_\_init\_\_.py
 
 When the development status changes, edit the *classifiers* in
 
