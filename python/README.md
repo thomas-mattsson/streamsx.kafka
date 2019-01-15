@@ -29,6 +29,17 @@ The documentation is also setup at `readthedocs.io` under the account: `IBMStrea
 Documentation links:
 * http://streamsxkafka.readthedocs.io/en/pypackage
 
+## Version update
+
+To change the version information of the Python package, edit following files:
+
+- ./package/docs/source/conf.py
+- ./package/streamsx/kafka/__init__.py
+
+When the development status changes, edit the *classifiers* in
+
+- ./package/setup.py
+
 ## Test
 
 The tests are run with a locally installed Streams installation and any Kafka broker.
