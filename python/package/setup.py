@@ -1,9 +1,10 @@
 from setuptools import setup
+import streamsx.kafka
 setup(
   name = 'streamsx.kafka',
   packages = ['streamsx.kafka'],
   include_package_data=True,
-  version = '0.1.1',
+  version = streamsx.kafka.__version__,
   description = 'IBM Streams Kafka integration',
   long_description = open('DESC.txt').read(),
   author = 'IBM Streams @ github.com',
@@ -12,10 +13,11 @@ setup(
   url = 'https://github.com/IBMStreams/streamsx.kafka',
   keywords = ['streams', 'ibmstreams', 'streaming', 'analytics', 'streaming-analytics', 'messaging', 'kafka'],
   classifiers = [
-    'Development Status :: 1 - Planning',
+    'Development Status :: 3 - Alpha',
     'License :: OSI Approved :: Apache Software License',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
   ],
   install_requires=['streamsx>=1.11.5a'],
   
