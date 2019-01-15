@@ -3,4 +3,5 @@ __pycache__
 python/package/build/
 python/package/dist/
 python/package/streamsx.kafka.egg-info/
+python/package/docs/build/
 

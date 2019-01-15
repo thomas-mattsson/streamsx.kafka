@@ -19,9 +19,9 @@ parameter to :py:func:`subscribe` or :py:func:`publish`.
 The minimum set of properties in the application configuration contains ``bootstrap.servers``, for example
 
 .. csv-table::
-    :header: config, value3
+    :header: config, value
 
-    bootstrap.servers, host1:port1,host2:port2,host3:port3
+    bootstrap.servers, "host1:port1,host2:port2,host3:port3"
 
 Other configs for Kafka consumers or Kafka producers can be added to the application configuration.
 When configurations are specified, which are specific for consumers or producers only, it is recommended
@@ -41,7 +41,7 @@ Sample
 ++++++
 
 A simple hello world example of a Streams application publishing to
-a topic and the same application consuming the same topic:
+a topic and the same application consuming the same topic::
 
     from streamsx.topology.topology import Topology
     from streamsx.topology.schema import CommonSchema
