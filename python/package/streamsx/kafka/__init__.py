@@ -76,7 +76,7 @@ a topic and the same application consuming the same topic::
 
 """
 
-__version__='0.1.1'
+__version__='0.2.0'
 
 __all__ = ['subscribe', 'publish']
 from streamsx.kafka._kafka import subscribe, publish

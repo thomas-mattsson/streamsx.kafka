@@ -10,7 +10,28 @@ import streamsx.spl.types
 from streamsx.topology.schema import CommonSchema
 
 
-def subscribe(topology, topic, appConfigName, schema, group=None, name=None):
+def _add_properties_file (topology, properties, file_name):
+    """
+    Adds properties as a dictionary as a file dependency to the topology
+
+    Args:
+        topology(Topology): the topology
+        properties(dict):   the Kafka properties
+        file_name(str):     the filename of the file dependency
+
+    Returns:
+        'etc/' + file_name
+    """
+    tmpdirname = gettempdir()
+    tmpfile = tmpdirname + '/' + file_name
+    with open (tmpfile, "w") as properties_file:
+        for key, value in properties.items():
+            properties_file.write (key + '=' + value + '\n')
+    topology.add_file_dependency (tmpfile, 'etc')
+    return 'etc/' + file_name
+
+
+def subscribe (topology, topic, kafka_properties, schema, group=None, name=None):
     """Subscribe to messages from a Kafka broker for a single topic.
 
     Adds a Kafka consumer that subscribes to a topic
@@ -19,7 +40,7 @@ def subscribe(topology, topic, appConfigName, schema, group=None, name=None):
     Args:
         topology(Topology): Topology that will contain the stream of messages.
         topic(str): Topic to subscribe messages from.
-        appConfigName(str): The name of the application configuration containing the consumer configurations, at minimum the ``bootstrap.servers`` property. Must not be set to ``None``.
+        kafka_properties(str|dict): Properties containing the consumer configurations, at minimum the ``bootstrap.servers`` property. When a string is given, it is the name of the application, which contains consumer configs. Must not be set to ``None``.
         schema(StreamSchema): Schema for returned stream.
         group(str): Kafka consumer group identifier. When not specified it default to the job name with `topic` appended separated by an underscore.
         name(str): Consumer name in the Streams context, defaults to a generated name.
@@ -35,16 +56,23 @@ def subscribe(topology, topic, appConfigName, schema, group=None, name=None):
         raise TypeError(schema)
 
     if group is None:
-        group = streamsx.spl.op.Expression.expression('getJobName() + "_" + "' + str(topic) + '"')
+        group = streamsx.spl.op.Expression.expression('getJobName() + "_" + "' + str (topic) + '"')
 
     if name is None:
         name = topic
+        fName = 'consumer-' + str(topic) + '.properties'
+    else:
+        fName = 'consumer-' + str(name) + '.' + str(topic) + '.properties'
 
-    _op = _KafkaConsumer(topology, schema=schema, outputMessageAttributeName=msg_attr_name, appConfigName=appConfigName, topic=topic, groupId=group, name=name)
+    if isinstance (kafka_properties, dict):
+        propsFilename = _add_properties_file (topology, kafka_properties, fName)
+        _op = _KafkaConsumer (topology, schema=schema, outputMessageAttributeName=msg_attr_name, propertiesFile=propsFilename, topic=topic, groupId=group, name=name)
+    else:
+        _op = _KafkaConsumer (topology, schema=schema, outputMessageAttributeName=msg_attr_name, appConfigName=kafka_properties, topic=topic, groupId=group, name=name)
     return _op.stream
 
 
-def publish(stream, topic, appConfigName, name=None):
+def publish(stream, topic, kafka_properties, name=None):
     """Publish messages to a topic in a Kafka broker.
 
     Adds a Kafka producer where each tuple on `stream` is
@@ -53,7 +81,7 @@ def publish(stream, topic, appConfigName, name=None):
     Args:
         stream(Stream): Stream of tuples to published as messages.
         topic(str): Topic to publish messages to.
-        appConfigName(str): The name of the application configuration containing the producer configurations, at minimum the ``bootstrap.servers`` property. Must not be set to ``None``.
+        kafka_properties(str|dict): Properties containing the producer configurations, at minimum the ``bootstrap.servers`` property. When a string is given, it is the name of the application, which contains consumer configs. Must not be set to ``None``.
         name(str): Producer name in the Streams context, defaults to a generated name.
 
     Returns:
@@ -66,10 +94,20 @@ def publish(stream, topic, appConfigName, name=None):
     else:
         raise TypeError(schema)
 
-    _op = _KafkaProducer (stream, appConfigName=appConfigName, topic=topic)
+    if isinstance (kafka_properties, dict):
+        if name is None:
+            fName = 'producer-' + str(topic) + '.properties'
+        else:
+            fName = 'producer-' + str(name) + '.' + str(topic) + '.properties'
+        propsFilename = _add_properties_file (stream.topology, kafka_properties, fName)
+        _op = _KafkaProducer (stream, propertiesFile=propsFilename, topic=topic)
+    else:
+        _op = _KafkaProducer (stream, appConfigName=kafka_properties, topic=topic)
+
     _op.params['messageAttribute'] = _op.attribute(stream, msg_attr)
 
     return streamsx.topology.topology.Sink(_op)
+
 
 class _KafkaConsumer(streamsx.spl.op.Source):
   def __init__(self, topology, schema, vmArg=None, appConfigName=None, clientId=None, commitCount=None, groupId=None, outputKeyAttributeName=None, outputMessageAttributeName=None, outputTimestampAttributeName=None, outputOffsetAttributeName=None, outputPartitionAttributeName=None, outputTopicAttributeName=None, partition=None, propertiesFile=None, startPosition=None, startOffset=None, startTime=None, topic=None, triggerCount=None, userLib=None, name=None):
