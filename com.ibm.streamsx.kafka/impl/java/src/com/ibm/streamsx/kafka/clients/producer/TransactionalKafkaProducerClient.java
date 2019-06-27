@@ -173,17 +173,11 @@ public class TransactionalKafkaProducerClient extends KafkaProducerClient {
     }
 
     @Override
-    public Future<RecordMetadata> send (ProducerRecord<?, ?> record, Tuple tuple) throws Exception {
-        Future<RecordMetadata> future = super.send (record, tuple);
-        futuresList.add(future);
-        return future;
-    }
-
-    @Override
     public void processRecord (ProducerRecord<?, ?> producerRecord, Tuple associatedTuple) throws Exception {
         // send always within a transaction
         checkAndBeginTransaction();
-        this.send (producerRecord, associatedTuple);
+        Future<RecordMetadata> future = send (producerRecord);
+        futuresList.add(future);
     }
 
 

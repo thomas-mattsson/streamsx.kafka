@@ -261,12 +261,26 @@ public class KafkaProducerClient extends AbstractKafkaClient {
         }
     }
     
-    public Future<RecordMetadata> send (ProducerRecord<?, ?> record, Tuple tuple) throws Exception {
+    @SuppressWarnings({ "rawtypes" })
+    /**
+     * Sends a producer record with the default callback
+     * @param record the producer record
+     * @return the Future
+     * @throws Exception
+     */
+    protected Future<RecordMetadata> send (ProducerRecord record) throws Exception {
         return send (record, this.callback);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Future<RecordMetadata> send (ProducerRecord record, Callback cb) throws Exception {
+    /**
+     * Sends a producer record with callback
+     * @param record the producer record
+     * @param cb     the callback for the send.
+     * @return the Future
+     * @throws Exception
+     */
+    protected Future<RecordMetadata> send (ProducerRecord record, Callback cb) throws Exception {
         synchronized (flushLock) {
             if (flushAfter > 0) {
                 // non-adaptive flush 
@@ -374,7 +388,7 @@ public class KafkaProducerClient extends AbstractKafkaClient {
      * @throws Exception
      */
     public void processRecord (ProducerRecord<?, ?> producerRecord, Tuple associatedTuple) throws Exception {
-        send (producerRecord, associatedTuple);
+        send (producerRecord);
     }
 
     /**

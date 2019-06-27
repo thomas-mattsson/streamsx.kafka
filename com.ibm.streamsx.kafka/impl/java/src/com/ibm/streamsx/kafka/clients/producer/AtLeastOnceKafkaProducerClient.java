@@ -40,13 +40,16 @@ public class AtLeastOnceKafkaProducerClient extends KafkaProducerClient {
         this.crContext = operatorContext.getOptionalContext (ConsistentRegionContext.class);
     }
 
+
+    /**
+     * @see com.ibm.streamsx.kafka.clients.producer.KafkaProducerClient#processRecord(org.apache.kafka.clients.producer.ProducerRecord, com.ibm.streams.operator.Tuple)
+     */
     @Override
-    public Future<RecordMetadata> send (ProducerRecord<?, ?> record, Tuple tuple) throws Exception {
-    	Future<RecordMetadata> future = super.send (record, tuple);
+    public void processRecord (ProducerRecord<?, ?> producerRecord, Tuple associatedTuple) throws Exception {
+        Future<RecordMetadata> future = send (producerRecord);
         futuresList.add (future);
-        return future;
     }
-    
+
     /**
      * Makes all buffered records immediately available to send and blocks until completion of the associated requests.
      * 
