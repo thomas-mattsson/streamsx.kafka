@@ -7,14 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.KafkaException;
 import org.apache.log4j.Logger;
 
 import com.ibm.streams.operator.OperatorContext;
+import com.ibm.streams.operator.Tuple;
 import com.ibm.streams.operator.state.Checkpoint;
 import com.ibm.streams.operator.state.ConsistentRegionContext;
 import com.ibm.streamsx.kafka.KafkaOperatorRuntimeException;
@@ -41,11 +40,10 @@ public class AtLeastOnceKafkaProducerClient extends KafkaProducerClient {
         this.crContext = operatorContext.getOptionalContext (ConsistentRegionContext.class);
     }
 
-    @SuppressWarnings("rawtypes")
-	@Override
-    public Future<RecordMetadata> send(ProducerRecord record) throws Exception {
-    	Future<RecordMetadata> future = super.send(record);
-        futuresList.add(future);
+    @Override
+    public Future<RecordMetadata> send (ProducerRecord<?, ?> record, Tuple tuple) throws Exception {
+    	Future<RecordMetadata> future = super.send (record, tuple);
+        futuresList.add (future);
         return future;
     }
     

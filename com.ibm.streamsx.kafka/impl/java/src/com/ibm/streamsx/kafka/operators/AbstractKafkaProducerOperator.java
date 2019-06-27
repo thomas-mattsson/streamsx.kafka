@@ -1,5 +1,6 @@
 package com.ibm.streamsx.kafka.operators;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -416,8 +417,14 @@ public abstract class AbstractKafkaProducerOperator extends AbstractKafkaOperato
         Long timestamp = (timestampAttributeName) != null ? tuple.getLong(timestampAttributeName) : null;
 
         // send message to all topics
-        for (String topic : topicList)
-            producer.processTuple(new ProducerRecord(topic, partition, timestamp, key, value));
+        if (topicList.size() == 1) {
+            producer.processRecord (new ProducerRecord (topicList.get(0), partition, timestamp, key, value), tuple);
+        }
+        else {
+            List<ProducerRecord<?, ?>> records = new ArrayList<> (topicList.size());
+            for (String topic : topicList) records.add (new ProducerRecord (topic, partition, timestamp, key, value));
+            producer.processRecords (records, tuple);
+        }
     }
 
     private List<String> getTopics(Tuple tuple) {
