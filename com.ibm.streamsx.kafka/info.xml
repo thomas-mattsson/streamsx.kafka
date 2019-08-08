@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<info:toolkitInfoModel xmlns:common="http://www.ibm.com/xmlns/prod/streams/spl/common"
- xmlns:info="http://www.ibm.com/xmlns/prod/streams/spl/toolkitInfo">
- <info:identity>
-   <info:name>com.ibm.streamsx.kafka</info:name>
-   <info:description>
+<info:toolkitInfoModel xmlns:common="http://www.ibm.com/xmlns/prod/streams/spl/common" xmlns:info="http://www.ibm.com/xmlns/prod/streams/spl/toolkitInfo">
+  <info:identity>
+    <info:name>com.ibm.streamsx.kafka</info:name>
+    <info:description>
 The Kafka toolkit integrates IBM Streams with Apache Kafka brokers. It can be used with following broker versions:
 
 * 0.10.2
@@ -135,8 +134,8 @@ continues fetching at the last committed offset.
 * The KafkaConsumer operator exposes some performance metrics of the consumer client as operator metrics, like the lag for each topic partition.
 
    </info:description>
-   <info:version>2.0.0</info:version>
-   <info:requiredProductVersion>4.2.0.0</info:requiredProductVersion>
- </info:identity>
- <info:dependencies/>
+    <info:version>2.0.0.hotfix1</info:version>
+    <info:requiredProductVersion>4.2.0.0</info:requiredProductVersion>
+  </info:identity>
+  <info:dependencies/>
 </info:toolkitInfoModel>
